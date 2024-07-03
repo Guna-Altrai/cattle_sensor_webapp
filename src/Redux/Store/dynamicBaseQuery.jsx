@@ -8,7 +8,6 @@ const dynamicBaseQuery = async (args, WebApi, extraOptions) => {
     prepareHeaders: async (headers, { getState }) => {
       headers.set("Content-Type", "application/json");
       const token = localStorage.getItem(authKey);
-      console.log("check token in dynamicBaseQuery:", token);
       if (token && token.length > 0) {
         headers.set("Authorization", `Bearer ${token}`);
       }

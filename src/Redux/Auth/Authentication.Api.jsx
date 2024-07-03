@@ -31,11 +31,23 @@ export const getAuthentication = backendApi.injectEndpoints({
         method: "GET",
       }),
     }),
-    postSensorData: builder.query({
+    latestData: builder.query({
+      query: (data) => ({
+        url: `latest_sensordata/${data.userId}/${data.sensorId}/`,
+        method: "GET",
+      }),
+    }),
+    postSensorData: builder.mutation({
       query: (credentials) => ({
         url: `sensor_data/`,
         method: "POST",
         body: credentials,
+      }),
+    }),
+    singleSensorData: builder.query({
+      query: () => ({
+        url: `export-csv/`,
+        method: "GET",
       }),
     }),
   }),
@@ -46,5 +58,7 @@ export const {
   useSensorPostMutation,
   useUserDataMutation,
   useSensorsQuery,
+  useLatestDataQuery,
   usePostSensorDataMutation,
+  useSingleSensorDataMutation, // Ensure this is correctly exported
 } = getAuthentication;
