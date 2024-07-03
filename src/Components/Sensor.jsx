@@ -1,29 +1,45 @@
 import React, { useState } from "react";
-import { headers, sensors } from "./data";
-import { FaTrashAlt } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import ConfigureSensor from "../Common/ConfigureSensor";
+import { deleteSensor } from "../Redux/Features/sensorSlice";
+
+export const headers = [
+  { label: "ID", key: "id" },
+  { label: "Name", key: "name" },
+  { label: "IP Address", key: "ip_address" },
+  { label: "Action", key: "action" },
+];
 
 const Sensor = () => {
-  const [sensorList, setSensorList] = useState(sensors);
+  const dispatch = useDispatch();
+  const sensorList = useSelector((state) => state.sensor.sensors);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingSensor, setEditingSensor] = useState(null);
 
   const handleDelete = (id) => {
-    setSensorList(sensorList.filter((sensor) => sensor.id !== id));
+    dispatch(deleteSensor(id));
+  };
+
+  const handleEdit = (sensor) => {
+    setEditingSensor(sensor);
+    setIsModalOpen(true);
   };
 
   const close = () => {
     setIsModalOpen(false);
+    setEditingSensor(null);
   };
 
   return (
     <div className="flex flex-col md:flex-row p-4 bg-gray-200 h-full items-center justify-center">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg w-4/5">
         <div className="bg-white flex flex-row justify-between items-center p-5">
-          <p className="text-lg font-bold tracking-wider">sensor</p>
+          <p className="text-lg font-bold tracking-wider">Sensor</p>
           <button
-            onClick={() => setIsModalOpen(!isModalOpen)}
+            onClick={() => setIsModalOpen(true)}
             type="button"
-            className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-8000 "
+            className="px-3 py-2 text-xs font-medium text-center inline-flex items-center text-white bg-blue-700 rounded-lg hover:bg-blue-8000"
           >
             <svg
               className="w-4 h-4 text-white me-2"
@@ -55,8 +71,8 @@ const Sensor = () => {
             Add
           </button>
         </div>
-        <table className="w-full text-sm text-left rtl:text-right ">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50  ">
+        <table className="w-full text-sm text-left rtl:text-right">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
               {headers.map((header, index) => (
                 <th key={index} scope="col" className="px-6 py-3">
@@ -67,16 +83,26 @@ const Sensor = () => {
           </thead>
           <tbody>
             {sensorList.map((sensor, index) => (
-              <tr key={index} className="bg-white border-b  ">
+              <tr key={sensor.id} className="bg-white border-b">
                 {headers.map((header, index) => (
                   <td key={index} className="px-6 py-4">
                     {header.key === "action" ? (
-                      <button
-                        onClick={() => handleDelete(sensor.id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <FaTrashAlt />
-                      </button>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEdit(sensor)}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(sensor.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <FaTrashAlt />
+                        </button>
+                      </div>
+                    ) : header.key === "id" ? (
+                      index + 1
                     ) : (
                       sensor[header.key]
                     )}
@@ -87,7 +113,13 @@ const Sensor = () => {
           </tbody>
         </table>
       </div>
-      {isModalOpen && <ConfigureSensor isOpen={isModalOpen} onClose={close} />}
+      {isModalOpen && (
+        <ConfigureSensor
+          isOpen={isModalOpen}
+          onClose={close}
+          sensor={editingSensor}
+        />
+      )}
     </div>
   );
 };

@@ -3,7 +3,6 @@ import koizIcon from "../assets/koiz-full-trans.png";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { onLogout } from "../Redux/Features/commonSlice";
-import { resetState } from "../Redux/Features/deviceSlice";
 import { resetHistoricalData } from "../Redux/Features/storeDataSlice";
 import { removeDevCon } from "../Redux/Features/devConSlice";
 import { authKey } from "../Context";
@@ -23,7 +22,6 @@ const Navbar = () => {
     navigate("/");
     localStorage.removeItem(authKey);
     dispatch(onLogout());
-    dispatch(resetState());
     dispatch(resetHistoricalData());
     dispatch(removeDevCon());
     dispatch(removeCsvData());

@@ -25,8 +25,26 @@ export const getAuthentication = backendApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    sensors: builder.query({
+      query: (userId) => ({
+        url: `sensor_list/${userId}/`,
+        method: "GET",
+      }),
+    }),
+    postSensorData: builder.query({
+      query: (credentials) => ({
+        url: `sensor_data/`,
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useSensorPostMutation, useUserDataMutation } =
-  getAuthentication;
+export const {
+  useLoginMutation,
+  useSensorPostMutation,
+  useUserDataMutation,
+  useSensorsQuery,
+  usePostSensorDataMutation,
+} = getAuthentication;

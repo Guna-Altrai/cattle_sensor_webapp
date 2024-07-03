@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
 import { useSensorPostMutation } from "../Redux/Auth/Authentication.Api";
+import { useDispatch, useSelector } from "react-redux";
+import { addSensor } from "../Redux/Features/sensorSlice";
 
 const ConfigureSensor = ({ isOpen, onClose }) => {
   const {
@@ -13,9 +15,10 @@ const ConfigureSensor = ({ isOpen, onClose }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [deviceDetails, setDeviceDetails] = useState(null);
-
+  const { userId } = useSelector((state) => state.common);
   const [sensorPost, { isLoading, isError, isSuccess }] =
     useSensorPostMutation();
+  const dispatch = useDispatch();
 
   const connectToTab = async () => {
     const WS_URL = `ws://192.168.1.35:81`;
@@ -47,15 +50,18 @@ const ConfigureSensor = ({ isOpen, onClose }) => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
-    // try {
-    //   const response = await sensorPost(data).unwrap();
-    //   console.log("Sensor posted successfully:", response);
-    //   // Handle success (e.g., close modal, show success message)
-    // } catch (error) {
-    //   console.error("Failed to post sensor:", error);
-    //   // Handle error (e.g., show error message)
-    // }
+    const payload = { ...data, user: userId };
+    console.log("payload sensor :", payload);
+    try {
+      const response = await sensorPost(payload).unwrap();
+      console.log("Sensor posted successfully:", response);
+      dispatch(addSensor(response));
+
+      // Handle success (e.g., close modal, show success message)
+    } catch (error) {
+      console.error("Failed to post sensor:", error);
+      // Handle error (e.g., show error message)
+    }
   };
 
   if (!isOpen) return null;
@@ -99,7 +105,7 @@ const ConfigureSensor = ({ isOpen, onClose }) => {
                     </div>
 
                     <label
-                      htmlFor="ipAddress"
+                      htmlFor="ip_address"
                       className="block text-sm font-medium leading-6 text-gray-900 mt-4"
                     >
                       IP Address
@@ -107,15 +113,15 @@ const ConfigureSensor = ({ isOpen, onClose }) => {
                     <div className="mt-2">
                       <input
                         type="text"
-                        id="ipAddress"
-                        {...register("ipAddress", {
+                        id="ip_address"
+                        {...register("ip_address", {
                           required: "IP Address is required",
                         })}
                         className="block w-full rounded-md border-2 px-2 py-1.5 text-gray-900 shadow-sm"
                       />
-                      {errors.ipAddress && (
+                      {errors.ip_address && (
                         <p className="text-red-600">
-                          {errors.ipAddress.message}
+                          {errors.ip_address.message}
                         </p>
                       )}
                     </div>
