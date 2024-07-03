@@ -19,16 +19,16 @@ const AllRoutes = () => {
         <Route
           path={route.path}
           element={
-            // isAuthenticated ? (
-            <Layout>{route.element}</Layout>
-            // ) : (
-            //   <Navigate
-            //     to={{
-            //       pathname: "/",
-            //       search: "next=" + route.path,
-            //     }}
-            //   />
-            // )
+            isAuthenticated ? (
+              <Layout>{route.element}</Layout>
+            ) : (
+              <Navigate
+                to={{
+                  pathname: "/",
+                  search: "next=" + route.path,
+                }}
+              />
+            )
           }
           key={idx}
         />

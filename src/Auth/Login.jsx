@@ -42,27 +42,17 @@ const Login = () => {
   );
 
   const loginSubmit = async (data) => {
-    console.log("from login input :", data);
-    navigate(redirectUrl);
-    // try {
-    //   const result = await login(data).unwrap();
-    //   console.log("login result:", result);
-    //   saveSession({
-    //     ...result,
-    //     access: result.access,
-    //     refresh: result.refresh,
-    //   });
-    //   if (result?.access.length > 0) {
-    //     navigate(redirectUrl);
-    //     setTimeout(async () => {
-    //       userData().then((res) => {
-    //         dispatch(updateAuthCheckParams(res?.data));
-    //       });
-    //     }, 2000);
-    //   }
-    // } catch (err) {
-    //   console.error('Login err :',err);
-    // }
+    try {
+      const result = await login(data).unwrap();
+      console.log("login result:", result);
+      saveSession(result.id);
+      dispatch(updateAuthCheckParams(result));
+      if (result?.id > 0) {
+        navigate(redirectUrl);
+      }
+    } catch (err) {
+      console.error("Login err :", err);
+    }
   };
 
   return (

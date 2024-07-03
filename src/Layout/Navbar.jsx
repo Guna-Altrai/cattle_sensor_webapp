@@ -33,11 +33,7 @@ const Navbar = () => {
     { path: "/sensor", label: "Sensor" },
     { path: "/dashboard", label: "Dashboard" },
   ];
-  console.log(isModalOpen);
 
-  const close = () => {
-    setIsModalOpen(false);
-  };
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 p-1 px-6 flex items-center justify-between">
       <img className="w-auto h-8 mr-2" src={koizIcon} alt="logo" />

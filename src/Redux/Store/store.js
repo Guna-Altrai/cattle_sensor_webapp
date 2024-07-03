@@ -9,6 +9,7 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import { backendApi } from "./dynamicBaseQuery";
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -17,7 +18,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(backendApi.middleware),
 });
 
 export const persistor = persistStore(store);

@@ -7,14 +7,14 @@ export const getAuthentication = backendApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: "admin_login/",
+        url: "login/",
         method: "POST",
         body: credentials,
       }),
     }),
-    register: builder.mutation({
+    sensorPost: builder.mutation({
       query: (credentials) => ({
-        url: "register/",
+        url: "sensor/",
         method: "POST",
         body: credentials,
       }),
@@ -28,5 +28,5 @@ export const getAuthentication = backendApi.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useUserDataMutation } =
+export const { useLoginMutation, useSensorPostMutation, useUserDataMutation } =
   getAuthentication;

@@ -14,7 +14,7 @@ export const devConSlice = createSlice({
         ...payload,
       };
     },
-    removeDevCon: () => initialState,
+    removeDevCon: () => initialDeviceConsumption,
   },
 });
 
