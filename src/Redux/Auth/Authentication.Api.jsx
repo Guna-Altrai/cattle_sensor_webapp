@@ -44,12 +44,6 @@ export const getAuthentication = backendApi.injectEndpoints({
         body: credentials,
       }),
     }),
-    singleSensorData: builder.query({
-      query: () => ({
-        url: `export-csv/`,
-        method: "GET",
-      }),
-    }),
   }),
 });
 
@@ -60,5 +54,4 @@ export const {
   useSensorsQuery,
   useLatestDataQuery,
   usePostSensorDataMutation,
-  useSingleSensorDataMutation, // Ensure this is correctly exported
 } = getAuthentication;

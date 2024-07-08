@@ -3,16 +3,14 @@ import koizIcon from "../assets/koiz-full-trans.png";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { onLogout } from "../Redux/Features/commonSlice";
-import { resetHistoricalData } from "../Redux/Features/storeDataSlice";
-import { removeDevCon } from "../Redux/Features/devConSlice";
 import { authKey } from "../Context";
 import { FaUser } from "react-icons/fa";
+import { resetSensor } from "../Redux/Features/sensorSlice";
 const Navbar = () => {
   const userDetails = useSelector((state) => state.common.userDetails);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -22,9 +20,7 @@ const Navbar = () => {
     navigate("/");
     localStorage.removeItem(authKey);
     dispatch(onLogout());
-    dispatch(resetHistoricalData());
-    dispatch(removeDevCon());
-    dispatch(removeCsvData());
+    dispatch(resetSensor());
   };
 
   const navLinks = [

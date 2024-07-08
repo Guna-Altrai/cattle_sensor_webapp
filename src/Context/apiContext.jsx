@@ -11,33 +11,22 @@ const ApiContext = createContext();
 export const ApiProvider = ({ children }) => {
   const { userId } = useSelector((state) => state.common);
   const sensorList = useSelector((state) => state.sensor.sensors);
-  const [wsInstance, setWsInstance] = useState(null); // State to store WebSocket instance
-
+  const [wsInstances, setWsInstances] = useState({}); // State to store WebSocket instances
   const [sensorData, setSensorData] = useState({}); // State to hold live sensor data
   const [postSensorData, { isLoading, isError, isSuccess }] =
     usePostSensorDataMutation(); // Correct usage here
-  const dispatch = useDispatch();
-  const { data, error } = useSensorsQuery(userId);
 
   useEffect(() => {
-    if (data) {
-      dispatch(setSensors(data));
-    }
-    if (error) {
-      console.error("Failed to fetch sensor data:", error);
-    }
-  }, [data, error, dispatch]);
-
-  useEffect(() => {
-    // WebSocket connection logic
+    // Function to connect to a sensor
     const connectToSensor = (ipAddress, sensorId, user) => {
       const WS_URL = `ws://${ipAddress}:81`; // Assuming WebSocket is on port 81
 
-      if (wsInstance) {
-        wsInstance.close();
+      // Close existing WebSocket connection if it exists
+      if (wsInstances[ipAddress]) {
+        wsInstances[ipAddress].close();
       }
-      let ws = new WebSocket(WS_URL);
-      setWsInstance(ws);
+
+      const ws = new WebSocket(WS_URL);
 
       ws.onopen = () => {
         console.log(`WebSocket Connected to ${ipAddress}`);
@@ -46,7 +35,6 @@ export const ApiProvider = ({ children }) => {
       ws.onmessage = async (e) => {
         try {
           const message = JSON.parse(e.data);
-          // console.log(message);
           const payload = {
             user: user,
             sensor: sensorId,
@@ -62,9 +50,9 @@ export const ApiProvider = ({ children }) => {
             Z: message.Z || null,
           };
 
+          // console.log(message);
           const resp = await postSensorData(payload).unwrap();
-          setSensorData(payload);
-          console.log(resp);
+          // console.log(resp);
         } catch (error) {
           console.error(
             `Error processing WebSocket message from ${ipAddress}:`,
@@ -81,10 +69,11 @@ export const ApiProvider = ({ children }) => {
         console.log(`WebSocket Closed for ${ipAddress}`, e.code, e.reason);
       };
 
-      // Clean up WebSocket on component unmount or when sensorList changes
-      return () => {
-        ws.close();
-      };
+      // Update WebSocket instances state
+      setWsInstances((prevInstances) => ({
+        ...prevInstances,
+        [ipAddress]: ws,
+      }));
     };
 
     if (sensorList.length > 0) {
@@ -96,6 +85,13 @@ export const ApiProvider = ({ children }) => {
     } else {
       console.log("No sensors found");
     }
+
+    // Cleanup function to close all WebSocket connections on component unmount
+    return () => {
+      Object.values(wsInstances).forEach((ws) => {
+        ws.close();
+      });
+    };
   }, [sensorList, userId, postSensorData]);
 
   const contextValue = {
