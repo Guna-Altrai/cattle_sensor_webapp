@@ -5,16 +5,12 @@ import { FaChevronDown } from "react-icons/fa";
 import { HiSquare3Stack3D } from "react-icons/hi2";
 import { IoArrowDownSharp, IoOpenOutline } from "react-icons/io5";
 
-// If you're using Next.js please use the dynamic import for react-apexcharts and remove the import from the top for the react-apexcharts
-// import dynamic from "next/dynamic";
-// const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
 const chartConfig = {
   type: "bar",
   height: "auto",
   series: [
     {
-      name: "Sales",
+      name: "Litre",
       data: [50, 40, 300, 320, 500, 350, 200],
     },
   ],
@@ -30,7 +26,7 @@ const chartConfig = {
     dataLabels: {
       enabled: false,
     },
-    colors: ["#020617"],
+    colors: ["#1975d1"],
     plotOptions: {
       bar: {
         columnWidth: "40%",

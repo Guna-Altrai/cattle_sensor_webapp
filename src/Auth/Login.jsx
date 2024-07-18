@@ -5,15 +5,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { EyeOpen } from "../assets/SVG/EyeOpen";
 import { EyeOff } from "../assets/SVG/EyeOff";
 import { loginValidationSchema } from "../Validation/Validator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useAuthContext } from "../Context";
 import { updateAuthCheckParams } from "../Redux/Features/commonSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useApi } from "../Context/apiContext";
-import {
-  useLoginMutation,
-  useUserDataMutation,
-} from "../Redux/Auth/Authentication.Api";
+import { useLoginMutation } from "../Redux/Auth/Authentication.Api";
 
 const Login = () => {
   const {
@@ -23,8 +19,6 @@ const Login = () => {
   } = useForm({ resolver: yupResolver(loginValidationSchema) });
 
   const [login] = useLoginMutation();
-  const [userData, { data: userList }] = useUserDataMutation();
-  console.log("retrieved data :", userList);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();

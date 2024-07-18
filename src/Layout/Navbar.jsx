@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import koizIcon from "../assets/koiz-full-trans.png";
+import koizIcon from "../assets/Images/cow_logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { onLogout } from "../Redux/Features/commonSlice";
 import { authKey } from "../Context";
 import { FaUser } from "react-icons/fa";
 import { resetSensor } from "../Redux/Features/sensorSlice";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { openSidebar } from "../Redux/Features/layout.slice";
+import NavBreadcrumb from "./Navbar Utils/NavBreadcrumb";
+
 const Navbar = () => {
   const userDetails = useSelector((state) => state.common.userDetails);
+  const isSidebarOpen = useSelector((state) => state.layout.isSidebarOpen);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -17,40 +22,32 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    navigate("/");
+    navigate("/auth/login");
     localStorage.removeItem(authKey);
     dispatch(onLogout());
     dispatch(resetSensor());
   };
 
-  const navLinks = [
-    { path: "/sensor", label: "Sensor" },
-    { path: "/dashboard", label: "Dashboard" },
-  ];
+  const handleSidebarToggle = () => {
+    dispatch(openSidebar(!isSidebarOpen));
+  };
 
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900 p-1 px-6 flex items-center justify-between">
-      <img className="w-auto h-8 mr-2" src={koizIcon} alt="logo" />
+    <nav className="bg-white border-gray-200 p-2 px-6 flex items-center lg:hidden block justify-between">
+      <div className="h-full items-center justify-center flex lg:hidden">
+        <button onClick={handleSidebarToggle} className="text-black ">
+          <GiHamburgerMenu className="size-7 opacity-80" />
+        </button>
+      </div>
+      <div className="h-full items-center justify-center flex ">
+        <NavBreadcrumb />
+      </div>
       <div className="flex flex-row justify-center gap-10 items-center">
-        {navLinks.map((link) => (
-          <div key={link.path}>
-            <NavLink
-              to={link.path}
-              className={({ isActive }) =>
-                isActive
-                  ? "block py-2 px-2 text-blue-700 rounded text-base font-bold"
-                  : "block py-2 px-2 text-gray-600 rounded md:bg-transparent text-base font-bold"
-              }
-            >
-              {link.label}
-            </NavLink>
-          </div>
-        ))}
         <div className="relative flex flex-col">
           <div>
             <button
               type="button"
-              className="inline-flex w-full justify-center items-center gap-2 text-sm font-semibold text-white"
+              className="inline-flex w-full justify-center items-center gap-2 text-sm font-semibold text-gray-800"
               id="menu-button"
               aria-expanded={isOpen}
               aria-haspopup="true"

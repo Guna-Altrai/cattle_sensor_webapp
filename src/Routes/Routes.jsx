@@ -1,8 +1,9 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { authProtectedListedRoutes, publicListedRoutes } from ".";
 import { useAuthContext } from "../Context";
 import Layout from "../Layout/Layout";
+import { authProtectedListedRoutes, publicListedRoutes } from ".";
+
 const AllRoutes = () => {
   const { isAuthenticated, loading } = useAuthContext();
 
@@ -22,12 +23,7 @@ const AllRoutes = () => {
             isAuthenticated ? (
               <Layout>{route.element}</Layout>
             ) : (
-              <Navigate
-                to={{
-                  pathname: "/",
-                  search: "next=" + route.path,
-                }}
-              />
+              <Navigate to={{ pathname: "/auth/login" }} />
             )
           }
           key={idx}

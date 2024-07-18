@@ -51,7 +51,7 @@ export const ApiProvider = ({ children }) => {
           };
 
           // console.log(message);
-          const resp = await postSensorData(payload).unwrap();
+          // const resp = await postSensorData(payload).unwrap();
           // console.log(resp);
         } catch (error) {
           console.error(

@@ -1,9 +1,8 @@
 import React from "react";
-import Card from "./Card";
 import BarChart from "./Charts/BarChart";
 import PieChart from "./Charts/PieChart";
 
-const Test = () => {
+const SenosrData = () => {
   return (
     <div className="w-full h-full  flex flex-col items-center">
       <div className="w-full grid grid-cols-1  gap-4">
@@ -14,4 +13,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default SenosrData;
